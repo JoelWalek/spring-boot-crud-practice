@@ -3,11 +3,13 @@ package com.springboot.cruddemo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.springboot.cruddemo.dao.EmployeeDAO;
 import com.springboot.cruddemo.entity.Employee;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -28,7 +30,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public Employee findById(int theId) {
-		return employeeDAO.findById(theId);
+		Employee employee = employeeDAO.findById(theId);
+		if(employee == null)
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found");
+		return employee;
 	}
 
 	@Override
