@@ -11,6 +11,10 @@ import org.springframework.web.server.ResponseStatusException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doNothing;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeServiceTest {
 
@@ -30,6 +34,40 @@ public class EmployeeServiceTest {
     public void init() {
         MockitoAnnotations.initMocks(this);
         employeeService = new EmployeeServiceImpl(employeeDao);
+    }
+    
+    //findAll - accepts no input param
+    //returns List of Employees if found
+    //throws exception if not found
+    
+    @Test
+    public void givenNoEmployees_whenFindAllIsCalled_thenThrowsException() {
+    	
+    	//arrange
+    	when(employeeDao.findAll()).thenReturn(null);
+    	
+    	//act
+    	assertThrows(ResponseStatusException.class, () -> employeeService.findAll());
+    	
+    	//assert
+    	verify(employeeDao).findAll();
+    }
+    
+    
+    @Test
+    public void givenEmployeesExist_whenFindAllIsCalled_thenReturnListOfEmployees() {
+    	
+    	//arrange
+    	//not sure why this doesn't work
+//    	List<Employee> employees = new ArrayList<Employee>();
+//    	when(employeeDao.findAll().thenReturn(employees));
+    	
+    	//act
+    	List<Employee> result = employeeService.findAll();
+    	
+    	//assert
+    	assertNotNull(result);
+    	
     }
 
     // FindById -> Accepts an integer id as input parameter
@@ -75,4 +113,79 @@ public class EmployeeServiceTest {
         verify(employeeDao).findById(id);
 
     }
+    
+    //save - accepts Employee object as param
+    //returns void
+    //throws exception if not found
+    
+    @Test
+    public void givenInvalidEmployee_whenSaveIsCalled_thenThrowsException() {
+    	
+    	//arrange
+    	Employee employee = null;
+    	//not sure how to handle void function
+//    	doNothing().when(employeeDao.save(employee));
+    	
+    	//act
+    	assertThrows(ResponseStatusException.class, () -> employeeService.save(employee));
+    	
+    	//assert
+    	verify(employeeDao).save(employee);
+    	
+    	
+    }
+    
+//    @Test
+//    public void givenValidEmployee_whenSaveIsCalled_thenNotSure() {
+//    	
+//    	//arrange
+//    	Employee employee = null;
+//    	doNothing().when(employeeDao.save(employee));
+//    	
+//    	//act
+//    	
+//    	//assert
+//    	verify(employeeDao).save(employee);
+//    	
+//    	
+//    }
+    
+    
+    
+    //deleteById - accepts integer id as param
+    //returns void
+    //throws exception if not found
+    
+    @Test
+    public void givenInvalidEmployeeID_whenDeleteByIdIsCalled_thenThrowsException() {
+    	
+    	//arrange
+    	int id = 99999;
+    	//not sure how to handle void function
+//    	doNothing().when(employeeDao.deleteById(id));
+    	
+    	//act
+    	assertThrows(ResponseStatusException.class, () -> employeeService.deleteByInt(id));
+    	
+    	//assert
+    	verify(employeeDao).deleteById(id);
+    	
+    	
+    }
+    
+//    @Test
+//    public void givenValidEmployeeID_whenDeleteByIdIsCalled_thenNotSure() {
+//    	
+//    	//arrange
+//    	int id = 1;
+//    	doNothing().when(employeeDao.deleteById(id));
+//    	
+//    	//act
+//
+//    	
+//    	//assert
+//    	verify(employeeDao).deleteById(id);
+//    	
+//    	
+//    }
 }
