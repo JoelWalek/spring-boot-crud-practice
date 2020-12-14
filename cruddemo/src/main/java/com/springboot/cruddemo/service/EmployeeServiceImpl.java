@@ -39,8 +39,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public void save(Employee theEmployee) {
+		if(theEmployee == null)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Employee object must not be null");
 		employeeDAO.save(theEmployee);
-
 	}
 
 	@Override

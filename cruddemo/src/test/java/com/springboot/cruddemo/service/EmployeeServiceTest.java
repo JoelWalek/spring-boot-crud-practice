@@ -6,12 +6,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +58,8 @@ public class EmployeeServiceTest {
     	
     	//arrange
     	//not sure why this doesn't work
-//    	List<Employee> employees = new ArrayList<Employee>();
-//    	when(employeeDao.findAll().thenReturn(employees));
+    	List<Employee> employees = new ArrayList<Employee>();
+    	when(employeeDao.findAll()).thenReturn(employees);
     	
     	//act
     	List<Employee> result = employeeService.findAll();
@@ -122,33 +121,32 @@ public class EmployeeServiceTest {
     public void givenInvalidEmployee_whenSaveIsCalled_thenThrowsException() {
     	
     	//arrange
-    	Employee employee = null;
     	//not sure how to handle void function
-//    	doNothing().when(employeeDao.save(employee));
-    	
-    	//act
-    	assertThrows(ResponseStatusException.class, () -> employeeService.save(employee));
-    	
-    	//assert
-    	verify(employeeDao).save(employee);
+
+        //act
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> employeeService.save(null));
+
+        //assert
+    	verify(employeeDao, times(0)).save(any());
+    	assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     	
     	
     }
     
-//    @Test
-//    public void givenValidEmployee_whenSaveIsCalled_thenNotSure() {
-//    	
-//    	//arrange
-//    	Employee employee = null;
-//    	doNothing().when(employeeDao.save(employee));
-//    	
-//    	//act
-//    	
-//    	//assert
-//    	verify(employeeDao).save(employee);
-//    	
-//    	
-//    }
+    @Test
+    public void givenValidEmployee_whenSaveIsCalled_thenDaoSaveIsCalled() {
+
+    	//arrange
+    	Employee employee = new Employee();
+
+    	//act
+        employeeService.save(employee);
+
+    	//assert
+    	verify(employeeDao, times(1)).save(employee);
+
+
+    }
     
     
     
