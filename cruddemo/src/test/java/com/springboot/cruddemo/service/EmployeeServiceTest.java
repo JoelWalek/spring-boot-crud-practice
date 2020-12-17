@@ -121,7 +121,7 @@ public class EmployeeServiceTest {
     public void givenInvalidEmployee_whenSaveIsCalled_thenThrowsException() {
     	
     	//arrange
-    	//not sure how to handle void function
+
 
         //act
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> employeeService.save(null));
@@ -144,6 +144,7 @@ public class EmployeeServiceTest {
 
     	//assert
     	verify(employeeDao, times(1)).save(employee);
+    	
 
 
     }
@@ -159,31 +160,31 @@ public class EmployeeServiceTest {
     	
     	//arrange
     	int id = 99999;
-    	//not sure how to handle void function
-//    	doNothing().when(employeeDao.deleteById(id));
+    	when(employeeDao.findById(id)).thenReturn(null);
     	
     	//act
-    	assertThrows(ResponseStatusException.class, () -> employeeService.deleteByInt(id));
+    	ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> employeeService.save(null));
     	
     	//assert
-    	verify(employeeDao).deleteById(id);
+    	assertEquals(HttpStatus.BAD_REQUEST, exception.getStatus());
     	
     	
     }
     
-//    @Test
-//    public void givenValidEmployeeID_whenDeleteByIdIsCalled_thenNotSure() {
-//    	
-//    	//arrange
-//    	int id = 1;
-//    	doNothing().when(employeeDao.deleteById(id));
-//    	
-//    	//act
-//
-//    	
-//    	//assert
-//    	verify(employeeDao).deleteById(id);
-//    	
-//    	
-//    }
+    @Test
+    public void givenValidEmployeeID_whenDeleteByIdIsCalled_thenDaoDeleteByIdIsCalled() {
+    	
+    	//arrange
+    	int id = 1;
+    	Employee employee = new Employee();
+    	when(employeeDao.findById(id)).thenReturn(employee);
+    	
+    	//act
+    	employeeService.deleteByInt(id);
+    	
+    	//assert
+    	verify(employeeDao, times(1)).deleteById(id);
+    	
+    	
+    }
 }

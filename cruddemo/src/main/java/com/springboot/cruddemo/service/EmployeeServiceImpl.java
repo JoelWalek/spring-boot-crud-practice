@@ -24,7 +24,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public List<Employee> findAll() {
-		return employeeDAO.findAll();
+		List<Employee> employees = employeeDAO.findAll();
+		if (employees == null) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employees not found");
+		}
+		return employees;
 	}
 
 	@Override
@@ -47,6 +51,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	@Transactional
 	public void deleteByInt(int theId) {
+		
+		//call findById to check if valid ID
+		this.findById(theId);
+
+		
 		employeeDAO.deleteById(theId);
 
 	}

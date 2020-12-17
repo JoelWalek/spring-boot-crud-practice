@@ -86,11 +86,11 @@ public class EmployeeRestController {
 	@ResponseStatus (HttpStatus.NO_CONTENT)
 	public String deleteEmployee(@PathVariable int employeeId) {
 		
-		Employee tempEmployee = employeeService.findById(employeeId);
+//		Employee tempEmployee = employeeService.findById(employeeId);
 		
-		if (tempEmployee == null) {
-			throw new RuntimeException("Employee id not found - " + employeeId);
-		}
+//		if (tempEmployee == null) {
+//			throw new RuntimeException("Employee id not found - " + employeeId);
+//		}
 		
 		employeeService.deleteByInt(employeeId);
 		
